@@ -62,8 +62,8 @@ public class GpsMockFragment extends BaseFragment implements SettingItemAdapter.
     }
 
     private void initWebView() {
-        mWebView = findViewById(R.id.web_view);
-        WebUtil.webViewLoadLocalHtml(mWebView, "html/map.html");
+        mWebView = findViewById(R.id.webview);
+        WebUtil.webViewLoadLocalHtml(mWebView, "map/map.html");
         mWebView.addInvokeListener(this);
     }
 

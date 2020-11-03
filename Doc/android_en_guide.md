@@ -1,17 +1,21 @@
 # Android Guide
+**Tip:**
+**1、In order to better support the official androidx and support of android, dokit has officially updated the sdk name from version 3.3.1. details as follows：androidx===>com.didichuxing.doraemonkit:dokitx:3.3.1; support===>com.didichuxing.doraemonkit:dokit:3.3.1;**
+
+**All the logs below use dokitx as an example. To use the support version, please change dokitx to dokit.**
 
 |DoKit|new Version|Desc|
 |-    |-      |-  |
-|support Androidx|3.1.6|support Androidx from v3.1.0|
-|supprot android support|3.0.7.1|Version 3.0.7.1 corresponds to the function of 3.1.6. Later support will be updated from time to time, mainly based on community feedback, please upgrade and adapt to Androidx as soon as possible|
+|support Androidx|3.3.1|support Androidx from v3.1.0|
+|supprot android support|3.0.8.0|Version 3.0.8.0 corresponds to the function of 3.2.0. Later support will be updated from time to time, mainly based on community feedback, please upgrade and adapt to Androidx as soon as possible|
 
 
 #### 1. DoKit SDK Dependencie
 
 ```groovy
 dependencies {
-    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:3.1.6'
-    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:3.1.6'
+    debugImplementation 'com.didichuxing.doraemonkit:dokitx:3.3.1'
+    releaseImplementation 'com.didichuxing.doraemonkit:dokitx-no-op:3.3.1'
 }
 ```
 
@@ -21,7 +25,7 @@ dependencies {
 If you cannot download the dependent library through jcenter and report the following error
 
 ```
-ERROR: Failed to resolve: com.didichuxing.doraemonkit:doraemonkit:3.1.6
+ERROR: Failed to resolve: com.didichuxing.doraemonkit:dokitx:3.3.1
 ```
 
 You can try again from the command line (take Mac system as an example under the project root directory)
@@ -47,7 +51,7 @@ If you need to support Weex, you can directly add the following dependencies
 ```groovy
 dependencies {
     …
-    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-weex:3.1.6'
+    debugImplementation 'com.didichuxing.doraemonkit:dokitx-weex:3.3.1'
     …
 }
 ```
@@ -57,7 +61,7 @@ If you need to integrate LeakCanary, you can directly add the following dependen
 ```groovy
 dependencies {
     …
-    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-leakcanary:3.1.6'
+    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-leakcanary:3.2.0'
     …
 }
 ```
@@ -89,7 +93,7 @@ Plugin includes the following functions:
 ```groovy
 buildscript {
     dependencies {
-        classpath 'com.didichuxing.doraemonkit:doraemonkit-plugin:3.1.6'
+        classpath 'com.didichuxing.doraemonkit:dokitx-plugin:3.3.1'
     }
 }
 ```
@@ -105,7 +109,6 @@ Added to the app module's build.gradle file at the same level as android {}
 ```groovy
 dokitExt {
     //dokit plugin switch
-    dokitPluginSwitch true
     comm {
         
         gpsSwitch true
@@ -140,6 +143,21 @@ dokitExt {
         }
     }
 }
+```
+The gradle.properties file in the project root directory is configured as follows
+```
+# dokit global configuration
+# Plug-in switch
+DOKIT_PLUGIN_SWITCH=true
+# Plugin log
+DOKIT_LOG_SWITCH=true
+# dokit slow function switch
+DOKIT_METHOD_SWITCH=true
+# dokit function call stack level
+DOKIT_METHOD_STACK_LEVEL=4
+# 0:The default mode is to print the function call stack, and the specified entry needs to be added. The default is application onCreate and attachBaseContext
+# 1:Normal mode prints the time consuming of a certain function when running, inserts global business code functions
+DOKIT_METHOD_STRATEGY=0
 ```
 
 

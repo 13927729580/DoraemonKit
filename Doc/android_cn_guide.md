@@ -1,9 +1,15 @@
 ## 接入方式
 
+**Tip:**
+**1、为了更好的支持android官方androidx和support，dokit从3.3.1版本开始正式对sdk名字进行更新。具体如下：androidx===>com.didichuxing.doraemonkit:dokitx:3.3.1; support===>com.didichuxing.doraemonkit:dokit:3.3.1;**
+
+**下面所有的日志均用dokitx举例。要使用support版本请将dokitx改为dokit即可。**
+
 |DoKit|最新版本|描述|
 |-|-|-|
-|支持Androidx|3.1.6|从v3.1.0版本开始支持androidx|
-|支持android support|3.0.7.1|3.0.7.1版本对应3.1.6的功能，后期support将会不定期更新，主要还是看社区的反馈，请大家尽快升级和适配Androidx|
+|支持Androidx|3.3.1|从v3.3.1版本开始更名为dokitx|
+|支持android support|3.0.8.0|3.0.8.0版本对应3.2.0的功能，后期support将会不定期更新，主要还是看社区的反馈，请大家尽快升级和适配Androidx|
+
 
 
 #### 1. Gradle 依赖
@@ -11,8 +17,8 @@
 ```groovy
 dependencies {
     …
-    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:3.1.6'
-    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:3.1.6'
+    debugImplementation 'com.didichuxing.doraemonkit:dokitx:3.3.1'
+    releaseImplementation 'com.didichuxing.doraemonkit:dokitx-no-op:3.3.1'
     …
 }
 ```
@@ -21,20 +27,20 @@ dependencies {
 
 滴滴内部业务线接入请将
 ```
-debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:3.1.6'
+debugImplementation 'com.didichuxing.doraemonkit:dokitx:3.3.1'
 ```
 
 替换为
 
 ```
-debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-rpc:3.1.6'
+debugImplementation 'com.didichuxing.doraemonkit:dokitx-rpc:3.3.1'
 ```
 
 **注意:** 
  假如你无法通过 jcenter 下载到依赖库并报了以下的错误 
 
 ```
-ERROR: Failed to resolve: com.didichuxing.doraemonkit:doraemonkit:3.1.6
+ERROR: Failed to resolve: com.didichuxing.doraemonkit:dokitx:3.3.1
 ```
 
 建议你可以尝试挂载VPN或通过命令行重试(以Mac系统为例 项目根目录下)
@@ -63,21 +69,13 @@ DoraemonKit目前已支持Weex工具，包括
 ```groovy
 dependencies {
     …
-    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-weex:3.1.6'
+    debugImplementation 'com.didichuxing.doraemonkit:dokitx-weex:3.3.1'
     …
 }
 ```
 
-如果有需要集成 `LeakCanary` 的需求可以直接添加下面依赖
 
-```groovy
-dependencies {
-    …
-    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-leakcanary:3.1.6'
-    …
-}
-```
-`LeakCanary` 已经在 doraemonkit 中动态集成，不需要自己再进行手动集成，只需要添加上面的依赖即可。
+`LeakCanary` 已经被废弃 大家可以自行集成leakCanary的2.0+版本。
 
 
 #### 2. 初始化
@@ -118,7 +116,7 @@ AOP包括以下几个功能:
 buildscript {
     dependencies {
         …
-        classpath 'com.didichuxing.doraemonkit:doraemonkit-plugin:3.1.6'
+        classpath 'com.didichuxing.doraemonkit:dokitx-plugin:3.3.1'
         …
     }
 }
@@ -135,8 +133,6 @@ apply plugin: 'com.didi.dokit'
 添加到app module 的build.gradle文件下 与android {}处于同一级
 ```groovy
 dokitExt {
-    //dokit 插件开关
-    dokitPluginSwitch true
     //通用设置
     comm {
         //地图经纬度开关
@@ -145,6 +141,8 @@ dokitExt {
         networkSwitch true
         //大图开关
         bigImgSwitch true
+        //webView js 抓包
+        webViewSwitch true
     }
 
     slowMethod {
@@ -160,6 +158,8 @@ dokitExt {
             thresholdTime 10
             //调用栈函数入口
             enterMethods = ["com.didichuxing.doraemondemo.MainDebugActivity.test1"]
+            //黑名单 粒度最小到类 暂不支持到方法
+            methodBlacklist = ["com.facebook.drawee.backends.pipeline.Fresco"]
         }
         //普通模式配置
         normalMethod {
@@ -173,7 +173,23 @@ dokitExt {
     }
 }
 ```
-
+项目根目录下的gradle.properties文件进行以下配置
+```
+#dokit全局配置
+# 插件开关
+DOKIT_PLUGIN_SWITCH=true
+# 插件日志
+# 自定义Webview的全限定名
+DOKIT_WEBVIEW_CLASS_NAME=com/didichuxing/doraemonkit/widget/webview/MyWebView
+DOKIT_LOG_SWITCH=true
+#dokit 慢函数开关
+DOKIT_METHOD_SWITCH=true
+#dokit 函数调用栈层级
+DOKIT_METHOD_STACK_LEVEL=4
+#0:默认模式 打印函数调用栈 需添加指定入口  默认为application onCreate 和attachBaseContext
+#1:普通模式 运行时打印某个函数的耗时 全局业务代码函数插入
+DOKIT_METHOD_STRATEGY=0
+```
 
 #### 4. 自定义功能组件（可选）
 
@@ -225,22 +241,26 @@ public void onCreate() {
 **DoraemonKit入口api**
 ```
 object DoraemonKit {
-    //不需要productId
     @JvmStatic
     fun install(app: Application) {
     }
 
-   //需要productId
     @JvmStatic
     fun install(app: Application, productId: String) {
     }
-    
-   //用户自定义用户专区分组
+
+    @JvmStatic
+    fun install(app: Application, mapKits: LinkedHashMap<String, MutableList<AbstractKit>>) {
+    }
+
     @JvmStatic
     fun install(app: Application, mapKits: LinkedHashMap<String, MutableList<AbstractKit>>, productId: String) {
     }
-   
-   //默认用户专区分组
+
+    @JvmStatic
+    fun install(app: Application, listKits: MutableList<AbstractKit>) {
+    }
+
     @JvmStatic
     fun install(app: Application, listKits: MutableList<AbstractKit>, productId: String) {
     }
@@ -252,23 +272,16 @@ object DoraemonKit {
      * @param productId Dokit平台端申请的productId
      */
     @JvmStatic
-    private  fun install(app: Application, mapKits: LinkedHashMap<String, MutableList<AbstractKit>>? = linkedMapOf(), listKits: MutableList<AbstractKit>? = mutableListOf(), productId: String? = "") {
+    private fun install(app: Application, mapKits: LinkedHashMap<String, MutableList<AbstractKit>>? = linkedMapOf(), listKits: MutableList<AbstractKit>? = mutableListOf(), productId: String? = "") {
 
     }
-    
-    //h5任意门回调
+
     @JvmStatic
     fun setWebDoorCallback(callback: WebDoorManager.WebDoorCallback?) {
     }
 
-    //显示mainIcon
     @JvmStatic
     fun show() {
-    }
-
-   //隐藏mainIcon
-    @JvmStatic
-    fun hide() {
     }
 
     /**
@@ -285,7 +298,9 @@ object DoraemonKit {
     fun hideToolPanel() {
     }
 
-    
+    @JvmStatic
+    fun hide() {
+    }
 
     /**
      * 禁用app信息上传开关，该上传信息只为做DoKit接入量的统计，如果用户需要保护app隐私，可调用该方法进行禁用
@@ -307,6 +322,20 @@ object DoraemonKit {
      */
     @JvmStatic
     fun setAwaysShowMainIcon(awaysShow: Boolean) {
+    }
+
+    /**
+     * 设置加密数据库密码
+     */
+    @JvmStatic
+    fun setDatabasePass(map: Map<String, String>) {
+    }
+
+    /**
+     * 设置文件管理助手http端口号
+     */
+    @JvmStatic
+    fun setFileManagerHttpPort(port: Int) {
     }
 }
 

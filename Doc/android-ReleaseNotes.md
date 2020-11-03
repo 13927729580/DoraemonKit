@@ -1,6 +1,33 @@
 DoraemonKit-Android releases
 ===
 
+## 3.3.1（dokitx 对应androidx，dokit对应Android Support）
+1.为了更好的支持android官方androidx和support，dokit从3.3.1版本开始正式对sdk名字进行更新。具体如下：
+
+androidx===>com.didichuxing.doraemonkit:dokitx:3.3.1;
+
+support===>com.didichuxing.doraemonkit:dokit:3.3.1;
+
+2.新增H5助手功能:针对webview中的js请求进行数据Mock和抓包
+
+3.新增三方库信息:将项目中依赖的三方库进行统一收集展现。
+
+4.兼容okhttp v3.+ 以及 v4.+
+
+5.大量github issues 问题修复。
+
+## 3.2.0 & 3.0.8.0
+1.文件同步助手功能已推出。
+详细文档参考：
+http://xingyun.xiaojukeji.com/docs/dokit/#/FileList
+
+2.github issues fixed
+
+## 3.1.8 & 3.0.7.2
+1.适配AGP 4.0
+
+2.github issues fixed
+
 ## 3.1.6
 1.更换dokit的底层插件框架为[booster](https://github.com/didi/booster),兼容性和编译速度得到显著提升
 

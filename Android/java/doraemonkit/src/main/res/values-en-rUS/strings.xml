@@ -9,9 +9,11 @@
     <string name="dk_category_platform">Platform</string>
     <string name="dk_kit_network_mock">Mock Data</string>
     <string name="dk_kit_health">Health Check</string>
+    <string name="dk_kit_file_transfer">FileManager</string>
     <string name="dk_category_weex">Weex</string>
 
     <string name="dk_kit_sysinfo">App Info</string>
+    <string name="dk_third_library_info">Third Library Info</string>
     <string name="dk_kit_develop">Developer Options</string>
     <string name="dk_kit_service_running">running service</string>
     <string name="dk_kit_local_lang">Language</string>
@@ -140,6 +142,7 @@
     <string name="dk_crash_capture_switch">Crash Log Collection Switch</string>
     <string name="dk_crash_capture_look">View Crash Log</string>
     <string name="dk_crash_capture_clean_data">Clean Crash Cache</string>
+    <string name="dk_kit_cache_check_all">all check</string>
     <string name="dk_crash_capture_summary_title">Crash Log List</string>
 
     <!--大图检测开关-->
@@ -316,10 +319,10 @@
     <string name="dk_health_dialog_test_person">tester</string>
     <string name="dk_health_dialog_test_person_hint">tester</string>
     <string name="dk_kit_log_min">Min</string>
-    <string name="dk_kit_setting">setting</string>
+    <string name="dk_kit_setting">more</string>
     <string name="dk_category_exit">Exit</string>
     <string name="dk_category_version">version</string>
-    <string name="dk_setting">Setting</string>
+    <string name="dk_setting">More</string>
     <string name="dk_edit">Edit</string>
     <string name="dk_complete">OK</string>
     <string name="dk_export">Export</string>
@@ -338,4 +341,17 @@
     <string name="dk_toolpanel_dialog_edit_tip">Whether to save the edited content</string>
     <string name="dk_toolpanel_dialog_reset_tip">Whether to restore to the initial state</string>
     <string name="dk_setting_kit_manager">Function management</string>
+
+    <!--    文件同步助手-->
+    <string name="dk_file_manager_tip_top">
+        <![CDATA[
+        Please use this function in the <font color=\"blue\"> [File Synchronization Assistant] </font> in the platform console of www.dokit.cn
+
+        ]]>
+    </string>
+
+    <string name="dk_file_manager_tip_bottom">Please connect through the current ip:port on the web</string>
+    <string name="dk_file_manager_sd_permission_tip">Your current targetSdkVersion>=29, please add android:requestLegacyExternalStorage="true" under the application of AndroidManifest.xml to solve the problem that the SD card does not have permission</string>
+    <!-- h5助手-->
+    <string name="dk_kit_h5_help">H5 Helper</string>
 </resources>

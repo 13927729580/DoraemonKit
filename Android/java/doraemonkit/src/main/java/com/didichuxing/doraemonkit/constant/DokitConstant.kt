@@ -3,14 +3,11 @@ package com.didichuxing.doraemonkit.constant
 import com.blankj.utilcode.util.PathUtils
 import com.didichuxing.doraemonkit.BuildConfig
 import com.didichuxing.doraemonkit.config.GlobalConfig
-import com.didichuxing.doraemonkit.kit.AbstractKit
-import com.didichuxing.doraemonkit.kit.dbdebug.DbDebugFragment
 import com.didichuxing.doraemonkit.kit.network.bean.WhiteHostBean
 import com.didichuxing.doraemonkit.kit.network.room_db.DokitDbManager
 import com.didichuxing.doraemonkit.kit.toolpanel.KitWrapItem
 import com.didichuxing.doraemonkit.model.ActivityLifecycleInfo
 import java.io.File
-import java.lang.ref.WeakReference
 
 /**
  * ================================================
@@ -49,6 +46,16 @@ object DokitConstant {
     val GLOBAL_SYSTEM_KITS: LinkedHashMap<String, MutableList<KitWrapItem>> = LinkedHashMap()
 
     /**
+     * 加密数据库账号密码配置
+     */
+    var DATABASE_PASS = mapOf<String, String>()
+
+    /**
+     * 平台端文件管理端口号
+     */
+    var FILE_MANAGER_HTTP_PORT = 8089
+
+    /**
      * 产品id
      */
     @JvmField
@@ -85,11 +92,17 @@ object DokitConstant {
     var WHITE_HOSTS = mutableListOf<WhiteHostBean>()
 
     /**
-     * 全局DBDebugFragment
+     * h5 js 注入代码开关
      */
     @JvmField
-    var DB_DEBUG_FRAGMENT: WeakReference<DbDebugFragment>? = null
+    var H5_JS_INJECT = false
 
+
+    /**
+     * h5 vConsole 注入代码开关
+     */
+    @JvmField
+    var H5_VCONSOLE_INJECT = false
 
     @JvmField
     var ACTIVITY_LIFECYCLE_INFOS = mutableMapOf<String, ActivityLifecycleInfo>()

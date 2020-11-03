@@ -1,7 +1,9 @@
 package com.didichuxing.doraemonkit.widget.webview;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.didichuxing.doraemonkit.R;
+import com.didichuxing.doraemonkit.kit.webview.OnWebViewTitleChangeCallBack;
 
 /**
  * Created by wanglikun on 2019/4/8
@@ -21,20 +24,41 @@ import com.didichuxing.doraemonkit.R;
 public class MyWebView extends WebView {
     private ProgressBar mProgressBar;
     private MyWebViewClient mMyWebViewClient;
+    OnWebViewTitleChangeCallBack callBack;
+
+
+    public void setCallBack(OnWebViewTitleChangeCallBack callBack) {
+        this.callBack = callBack;
+    }
 
     public MyWebView(Context context) {
-        super(context);
+        super(getFixedContext(context));
         init(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(getFixedContext(context), attrs);
         init(context);
     }
 
     public MyWebView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(getFixedContext(context), attrs, defStyleAttr);
         init(context);
+    }
+
+    /**
+     * 参考: https://www.jianshu.com/p/d86de6a1e791
+     *
+     * @param context
+     * @return
+     */
+    @SuppressLint("ObsoleteSdkInt")
+    private static Context getFixedContext(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return context.createConfigurationContext(new Configuration());
+        } else {
+            return context;
+        }
     }
 
     private Activity mContainerActivity;
@@ -83,6 +107,14 @@ public class MyWebView extends WebView {
                         showLoadProgress(newProgress);
                     } else {
                         hideLoadProgress();
+                    }
+                }
+
+                @Override
+                public void onReceivedTitle(WebView view, String title) {
+                    super.onReceivedTitle(view, title);
+                    if (callBack != null) {
+                        callBack.onChange(title);
                     }
                 }
             });
